@@ -9,3 +9,6 @@ A General Assembly - Web Development Immersive Final Project.
 
 To run the game you merely have to host the index.html to yourself either through WEBrick, node's HTTP-Server module, etc.
 
+### Acknowledgements
+
+Art assets from [Buch](http://opengameart.org/users/buch)
