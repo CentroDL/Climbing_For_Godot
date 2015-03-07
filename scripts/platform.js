@@ -11,7 +11,7 @@ function preload() {
 }
 
 var player;
-var facing = 'left';
+var facing = 'right';
 var jumpTimer = 0;
 var cursors;
 var jumpButton;
@@ -29,7 +29,10 @@ function create() {
 
     // add.sprite x-coord, y-coord, flag, frame
     player = game.add.sprite( 450, 300, 'dude');
+
     player.scale.set(2);
+    player.anchor.setTo(0.5,0.5);
+
 
     game.physics.enable(player, Phaser.Physics.ARCADE);
 
@@ -38,7 +41,7 @@ function create() {
     // player.body.maxVelocity.y = 500;
     // player.body.setSize(20, 32, 5, 16);
 
-    player.animations.add('right', [ 1, 2, 3, 4], 10, true);
+    player.animations.add('walk', [ 1, 2, 3, 4], 10, true);
     player.animations.add('jump', [5,6,7,8], 5, true );
     // player.animations.add('turn', [4], 20, true);
     // player.animations.add('right', [5, 6, 7, 8], 10, true);
@@ -52,6 +55,13 @@ function update() {
 
     // game.physics.arcade.collide(player, layer);
 
+    //modify heading
+    if(facing == 'left'){
+        player.scale.x = -2;
+    } else if (facing == 'right'){
+        player.scale.x = 2;
+    }
+
     player.body.velocity.x = 0;
 
     if (cursors.left.isDown)
@@ -60,7 +70,7 @@ function update() {
 
         if (facing != 'left')
         {
-            player.animations.play('left');
+            player.animations.play('walk');
             facing = 'left';
         }
     }
@@ -70,7 +80,7 @@ function update() {
 
         if (facing != 'right')
         {
-            player.animations.play('right');
+            player.animations.play('walk');
             facing = 'right';
         }
     }
