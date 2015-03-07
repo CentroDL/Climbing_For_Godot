@@ -1,0 +1,14 @@
+
+body{
+  background-color: black;
+}
+
+#wdi-game {
+  margin: 0 auto;
+  width: 1100px;
+}
+
+canvas{
+  margin: 0 auto;
+  border: 1px solid white;
+}
