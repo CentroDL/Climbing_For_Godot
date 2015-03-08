@@ -6,11 +6,11 @@ function preload() {
 
     game.load.spritesheet('dude', 'assets/images/dude.png', 18, 24, 23, 0, 14 );
     //spritesheet(key, url, frameWidth, frameHeight, frameMax, margin, spacing)
-    // game.load.tilemap('godot-tree', 'assets/godot.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.tilemap('godot-tree', 'assets/godot.json', null, Phaser.Tilemap.TILED_JSON);
 
     game.load.image('background', 'assets/layers/parallax-mountain-bg.png');
     game.load.image('chain', 'assets/images/chain.png', 16, 16);
-    // game.load.image('tiles-1', 'assets/images/sheet_9.png');
+    game.load.image('tiles', 'assets/images/sheet_9.png');
 
 }
 
@@ -21,6 +21,8 @@ var jumpTimer = 0;
 var cursors;
 var jumpButton;
 var bg;
+var map;
+var layer, layer2;
 
 function create() {
 
@@ -31,10 +33,11 @@ function create() {
     bg.fixedToCamera = true;
 
     //level
-    // map = game.add.tilemap( 'godot-tree' );
-    // map.addTilesetImage('tiles-1');
-    // layer = map.createLayer('Tile Layer 1');
-    // layer.resizeWorld();
+    map = game.add.tilemap( 'godot-tree' );
+    map.addTilesetImage('sheet_9','tiles');
+    layer = map.createLayer('Tile Layer 1');
+    layer2 = map.createLayer('Tile Layer 2');
+    layer.resizeWorld();
 
     // game.physics.startSystem(Phaser.Physics.ARCADE);
     game.physics.startSystem(Phaser.Physics.P2JS);
@@ -68,8 +71,7 @@ function create() {
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-    //chain
-    createChain( 40, 480, 0);
+    createChain( 30, 480, 0);
 
 }
 
@@ -218,3 +220,4 @@ function checkIfCanJump() {
     return result;
 
 }
+
