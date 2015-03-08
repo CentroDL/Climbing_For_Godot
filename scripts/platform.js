@@ -36,9 +36,10 @@ function create() {
     // layer = map.createLayer('Tile Layer 1');
     // layer.resizeWorld();
 
-    game.physics.startSystem(Phaser.Physics.ARCADE);
+    // game.physics.startSystem(Phaser.Physics.ARCADE);
     game.physics.startSystem(Phaser.Physics.P2JS);
-    game.physics.arcade.gravity.y = 300;
+
+    game.physics.p2.gravity.y = 300;
 
     // add.sprite x-coord, y-coord, flag, frame
     player = game.add.sprite( 450, 300, 'dude');
@@ -47,7 +48,9 @@ function create() {
     player.anchor.setTo(0.5,0.5);
 
 
-    game.physics.enable(player, Phaser.Physics.ARCADE);
+    game.physics.p2.enable(player);
+    // player.body.kinematic = true;
+    player.body.fixedRotation = true;
 
     player.body.collideWorldBounds = true;
     // player.body.gravity.y = 1000;
@@ -75,7 +78,7 @@ function update() {
     // game.physics.arcade.collide(player, layer);
     
     // reset velocity every tick
-    player.body.velocity.x = 0;
+    
 
     //flip sprite based on direction
     if(facing == 'left'){
@@ -87,7 +90,7 @@ function update() {
 
     if (cursors.left.isDown)
     {
-        player.body.velocity.x = -150;
+        player.body.moveLeft(150);
 
         if (facing != 'left')
         {
@@ -97,7 +100,7 @@ function update() {
     }
     else if (cursors.right.isDown)
     {
-        player.body.velocity.x = 150;
+        player.body.moveRight(150);
 
         if (facing != 'right')
         {
@@ -107,6 +110,7 @@ function update() {
     }
     else
     {
+        player.body.velocity.x = 0;
         if (facing != 'idle')
         {
             player.animations.stop();
@@ -124,10 +128,10 @@ function update() {
         }
     }
 
-    if (jumpButton.isDown && player.body.onFloor() && game.time.now > jumpTimer)
+    if (jumpButton.isDown && game.time.now > jumpTimer && checkIfCanJump())
     {
         player.animations.play("jump");
-        player.body.velocity.y = -250;
+        player.body.moveUp(250);
         jumpTimer = game.time.now + 750;
     }
 
@@ -192,4 +196,25 @@ function createChain( length, xAnchor, yAnchor){
         lastRect = newRect;
 
     }
+}
+
+function checkIfCanJump() {
+
+    var yAxis = p2.vec2.fromValues(0, 1);
+    var result = false;
+
+    for (var i = 0; i < game.physics.p2.world.narrowphase.contactEquations.length; i++)
+    {
+        var c = game.physics.p2.world.narrowphase.contactEquations[i];
+
+        if (c.bodyA === player.body.data || c.bodyB === player.body.data)
+        {
+            var d = p2.vec2.dot(c.normalA, yAxis); // Normal dot Y-axis
+            if (c.bodyA === player.body.data) d *= -1;
+            if (d > 0.5) result = true;
+        }
+    }
+    
+    return result;
+
 }
