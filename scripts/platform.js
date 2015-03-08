@@ -35,6 +35,8 @@ function create() {
     //level
     map = game.add.tilemap( 'godot-tree' );
     map.addTilesetImage('sheet_9','tiles');
+    map.setCollisionBetween(7,13); //check this out 
+    map.setCollisionBetween(22,28);
     layer = map.createLayer('Tile Layer 1');
     layer2 = map.createLayer('Tile Layer 2');
     layer.resizeWorld();
@@ -45,99 +47,18 @@ function create() {
     game.physics.p2.gravity.y = 300;
 
     // add.sprite x-coord, y-coord, flag, frame
-    player = game.add.sprite( 450, 300, 'dude');
-
-    player.scale.set(2);
-    player.anchor.setTo(0.5,0.5);
-
-
-    game.physics.p2.enable(player);
-    // player.body.kinematic = true;
-    player.body.fixedRotation = true;
-
-    player.body.collideWorldBounds = true;
-    // player.body.gravity.y = 1000;
-    // player.body.maxVelocity.y = 500;
-    // player.body.setSize(20, 32, 5, 16);
-
-
-    player.animations.add('walk', [ 1, 2, 3, 4], 8, true);
-    player.animations.add('jump', [5,6,7,8], 5, true );
-    // player.animations.add('turn', [4], 20, true);
-    // player.animations.add('right', [5, 6, 7, 8], 10, true);
-
-
-    game.camera.follow(player);
+    
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
+    createPlayer( 50, 680);
     createChain( 30, 480, 0);
 
 }
 
 function update() {
 
-    // game.physics.arcade.collide(player, layer);
-    
-    // reset velocity every tick
-    
-
-    //flip sprite based on direction
-    if(facing == 'left'){
-        player.scale.x = -2;
-    } else if (facing == 'right'){
-        player.scale.x = 2;
-    }
-
-
-    if (cursors.left.isDown)
-    {
-        player.body.moveLeft(150);
-
-        if (facing != 'left')
-        {
-            player.animations.play('walk');
-            facing = 'left';
-        }
-    }
-    else if (cursors.right.isDown)
-    {
-        player.body.moveRight(150);
-
-        if (facing != 'right')
-        {
-            player.animations.play('walk');
-            facing = 'right';
-        }
-    }
-    else
-    {
-        player.body.velocity.x = 0;
-        if (facing != 'idle')
-        {
-            player.animations.stop();
-
-            if (facing == 'left')
-            {
-                player.frame = 0;
-            }
-            else
-            {
-                player.frame = 5;
-            }
-
-            facing = 'idle';
-        }
-    }
-
-    if (jumpButton.isDown && game.time.now > jumpTimer && checkIfCanJump())
-    {
-        player.animations.play("jump");
-        player.body.moveUp(250);
-        jumpTimer = game.time.now + 750;
-    }
-
-
+    movement();
 
 }
 
@@ -221,3 +142,83 @@ function checkIfCanJump() {
 
 }
 
+function movement(){
+        if(facing == 'left'){
+        player.scale.x = -2;
+    } else if (facing == 'right'){
+        player.scale.x = 2;
+    }
+
+
+    if (cursors.left.isDown)
+    {
+        player.body.moveLeft(150);
+
+        if (facing != 'left')
+        {
+            player.animations.play('walk');
+            facing = 'left';
+        }
+    }
+    else if (cursors.right.isDown)
+    {
+        player.body.moveRight(150);
+
+        if (facing != 'right')
+        {
+            player.animations.play('walk');
+            facing = 'right';
+        }
+    }
+    else
+    {
+        player.body.velocity.x = 0;
+        if (facing != 'idle')
+        {
+            player.animations.stop();
+
+            if (facing == 'left')
+            {
+                player.frame = 0;
+            }
+            else
+            {
+                player.frame = 5;
+            }
+
+            facing = 'idle';
+        }
+    }
+
+    if (jumpButton.isDown && game.time.now > jumpTimer && checkIfCanJump())
+    {
+        player.animations.play("jump");
+        player.body.moveUp(250);
+        jumpTimer = game.time.now + 750;
+    }
+
+}
+
+function createPlayer( xPoint, yPoint){
+    player = game.add.sprite( xPoint, yPoint, 'dude');
+
+    player.scale.set(2);
+    player.anchor.setTo(0.5,0.5);
+    game.physics.p2.enable(player);
+    // player.body.kinematic = true;
+    
+    player.body.fixedRotation = true;
+    player.body.collideWorldBounds = true;
+    // player.body.gravity.y = 1000;
+    // player.body.maxVelocity.y = 500;
+    // player.body.setSize(20, 32, 5, 16);
+
+
+    player.animations.add('walk', [ 1, 2, 3, 4], 8, true);
+    player.animations.add('jump', [5,6,7,8], 5, true );
+    // player.animations.add('turn', [4], 20, true);
+    // player.animations.add('right', [5, 6, 7, 8], 10, true);
+
+
+    game.camera.follow(player);
+}
