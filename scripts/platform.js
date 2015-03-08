@@ -25,6 +25,7 @@ var map;
 var layer, layer2;
 
 function create() {
+    game.physics.startSystem(Phaser.Physics.P2JS);
 
     // background image
     bg = game.add.image(0, 0, 'background');
@@ -35,15 +36,17 @@ function create() {
     //level
     map = game.add.tilemap( 'godot-tree' );
     map.addTilesetImage('sheet_9','tiles');
-    map.setCollisionBetween(7,13); //check this out 
-    map.setCollisionBetween(22,28);
+    map.setCollisionBetween(1,120); //check this out 
+   
+    // map.setCollisionBetween(22,28);
+    game.physics.p2.convertTilemap(map, layer);
+
     layer = map.createLayer('Tile Layer 1');
     layer2 = map.createLayer('Tile Layer 2');
     layer.resizeWorld();
 
     // game.physics.startSystem(Phaser.Physics.ARCADE);
-    game.physics.startSystem(Phaser.Physics.P2JS);
-
+    
     game.physics.p2.gravity.y = 300;
 
     // add.sprite x-coord, y-coord, flag, frame
