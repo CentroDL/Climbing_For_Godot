@@ -36,7 +36,7 @@ function create() {
     //level
     map = game.add.tilemap( 'godot-tree' );
     map.addTilesetImage('sheet_9','tiles');
-    map.setCollisionBetween(1,120); //check this out 
+    map.setCollisionBetween(7,13); //check this out 
    
     // map.setCollisionBetween(22,28);
     game.physics.p2.convertTilemap(map, layer);
