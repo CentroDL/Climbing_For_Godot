@@ -11,6 +11,7 @@ function preload() {
     game.load.image('background', 'assets/layers/parallax-mountain-bg.png');
     game.load.image('chain', 'assets/images/chain.png', 16, 16);
     game.load.image('tiles', 'assets/images/sheet_9.png');
+    game.load.image( 'pixel', 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/836/pixel_1.png' );
 
 }
 
@@ -23,6 +24,7 @@ var jumpButton;
 var bg;
 var map;
 var layer, layer2;
+var konami = new Konami( function(){ alert("KONAMI CODE ENTERED");});
 
 function create() {
     game.physics.startSystem(Phaser.Physics.P2JS);
@@ -36,8 +38,8 @@ function create() {
     //level
     map = game.add.tilemap( 'godot-tree' );
     map.addTilesetImage('sheet_9','tiles');
-    map.setCollisionBetween(7,13); //check this out 
-   
+    map.setCollisionBetween(7,13); //check this out
+
     // map.setCollisionBetween(22,28);
     game.physics.p2.convertTilemap(map, layer);
 
@@ -46,16 +48,16 @@ function create() {
     layer.resizeWorld();
 
     // game.physics.startSystem(Phaser.Physics.ARCADE);
-    
+
     game.physics.p2.gravity.y = 300;
 
     // add.sprite x-coord, y-coord, flag, frame
-    
-    cursors = game.input.keyboard.createCursorKeys();
-    jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
+
+    bindControls();
     createPlayer( 50, 680);
     createChain( 30, 480, 0);
+
 
 }
 
@@ -74,7 +76,7 @@ function render () {
 }
 
 function createChain( length, xAnchor, yAnchor){
-    
+
     var lastRect;
     var height = 20;        //  Height for the physics body - your image height is 8px
     var width = 16;         //  This is the width for the physics body. If too small the rectangles will get scrambled together.
@@ -89,7 +91,7 @@ function createChain( length, xAnchor, yAnchor){
         {
             //  Add sprite (and switch frame every 2nd time)
             newRect = game.add.sprite(x, y, 'chain', 1);
-        }   
+        }
         else
         {
             newRect = game.add.sprite(x, y, 'chain', 0);
@@ -107,7 +109,7 @@ function createChain( length, xAnchor, yAnchor){
             newRect.body.static = true;
         }
         else
-        {  
+        {
             //  Anchor the first one created
             newRect.body.velocity.x = 400;      //  Give it a push :) just for fun
             newRect.body.mass = length / i;     //  Reduce mass for evey rope element
@@ -140,7 +142,7 @@ function checkIfCanJump() {
             if (d > 0.5) result = true;
         }
     }
-    
+
     return result;
 
 }
@@ -209,7 +211,7 @@ function createPlayer( xPoint, yPoint){
     player.anchor.setTo(0.5,0.5);
     game.physics.p2.enable(player);
     // player.body.kinematic = true;
-    
+
     player.body.fixedRotation = true;
     player.body.collideWorldBounds = true;
     // player.body.gravity.y = 1000;
@@ -224,4 +226,9 @@ function createPlayer( xPoint, yPoint){
 
 
     game.camera.follow(player);
+}
+
+function bindControls(){
+    cursors = game.input.keyboard.createCursorKeys();
+    jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 }
